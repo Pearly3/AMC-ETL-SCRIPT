@@ -1,0 +1,14 @@
+{
+    "sample_query": {
+      "description": "Sample query for AMC data",
+      "sql": "SELECT * FROM sample_table LIMIT 10"
+    },
+    "daily_report": {
+      "description": "Daily reporting query",
+      "sql": "SELECT date, count(*) as record_count FROM daily_metrics GROUP BY date ORDER BY date DESC"
+    },
+    "audience_overlap": {
+      "description": "Audience overlap analysis",
+      "sql": "SELECT audience_1, audience_2, COUNT(*) as overlap_count FROM audience_overlap_table GROUP BY audience_1, audience_2 ORDER BY overlap_count DESC"
+    }
+  }

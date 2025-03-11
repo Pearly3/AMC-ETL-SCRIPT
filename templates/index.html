@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Marketing Cloud ETL Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #232F3E; /* Amazon dark blue */
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input, button {
+            padding: 8px;
+            width: 100%;
+        }
+        button {
+            background-color: #FF9900; /* Amazon orange */
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #e68a00;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Amazon Marketing Cloud ETL Tool</h1>
+    <p>Use this tool to extract data from Amazon Marketing Cloud, transform it, and load it into Snowflake.</p>
+    
+    <div class="form-group">
+        <label for="query">Select AMC Query:</label>
+        <select id="query">
+            <option value="sample_query">Sample Query</option>
+            <option value="daily_report">Daily Report</option>
+            <option value="audience_overlap">Audience Overlap</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date">
+    </div>
+    
+    <div class="form-group">
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date">
+    </div>
+    
+    <button id="run-etl">Run ETL Process</button>
+    
+    <div id="result" style="display: none;"></div>
+    
+    <script>
+        document.getElementById('run-etl').addEventListener('click', async () => {
+            const queryName = document.getElementById('query').value;
+            const startDate = document.getElementById('start_date').value;
+            const endDate = document.getElementById('end_date').value;
+            
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result').textContent = 'Processing...';
+            
+            try {
+                const response = await fetch('/run-etl', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query_name: queryName,
+                        start_date: startDate,
+                        end_date: endDate
+                    }),
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+                } else {
+                    document.getElementById('result').textContent = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                document.getElementById('result').textContent = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
